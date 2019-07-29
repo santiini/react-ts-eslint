@@ -1,0 +1,27 @@
+{
+  // eslint, prettier 设置
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "typescript",
+      "autoFix": true
+    },
+    {
+      "language": "typescriptreact",
+      "autoFix": true
+    }
+  ],
+  "editor.formatOnSave": true,
+  "eslint.autoFixOnSave": true,
+  "prettier.singleQuote": true,
+  "prettier.semi": false,
+  "editor.tabSize": 2,
+  "prettier.eslintIntegration": true,
+  // typescript 设置
+  "typescript.tsdk": "node_modules/typescript/lib",
+  // stylelint 设置
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false
+}
