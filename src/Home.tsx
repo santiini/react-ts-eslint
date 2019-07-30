@@ -1,6 +1,8 @@
 import React, {FC} from 'react';
 import {Button} from 'antd';
-import {useStateValue, ActionType} from './store';
+import {useStateValue} from './store';
+import {CounterActionTypes} from './store/counterReducer';
+import {TeamActionTypes} from './store/teamReducer';
 
 interface HomeProps {
   title?: string;
@@ -10,18 +12,31 @@ const Home: FC<HomeProps> = (props) => {
 
   const handleIncrement = (): void => {
     dispatch({
-      type: ActionType.Increment,
+      key: 'counter',
+      type: CounterActionTypes.Increment,
       payload: {
-        count: 11,
+        data: 11,
       },
     });
   };
 
   const handleDecrement = (): void => {
     dispatch({
-      type: ActionType.Decrement,
+      key: 'counter',
+      type: CounterActionTypes.Decrement,
       payload: {
-        count: 4,
+        data: 4,
+      },
+    });
+  };
+
+  const handleChangeTeam = (): void => {
+    dispatch({
+      key: 'team',
+      type: TeamActionTypes.ChangeTeam,
+      payload: {
+        data: 'team 3',
+        total: 3,
       },
     });
   };
@@ -29,9 +44,13 @@ const Home: FC<HomeProps> = (props) => {
   return (
     <div>
       <h4>Home--Test</h4>
-      <div>{state.count}</div>
+      <div>{state.counter.count}</div>
       <Button onClick={handleIncrement}>increment++</Button>
       <Button onClick={handleDecrement}>decrement--</Button>
+      <h4>Team</h4>
+      <div>data: {state.team.data}</div>
+      <div>id: {state.team.id}</div>
+      <Button onClick={handleChangeTeam}>change Team</Button>
     </div>
   );
 };
