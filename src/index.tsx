@@ -1,15 +1,15 @@
 import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import {StateProvider} from './store';
 import {LocaleProvider} from 'antd';
 import {Router, Switch, Redirect} from 'react-router-dom';
-import customHistory from './history';
-import {NamedRoute} from './lib/Route';
+import App from './App';
 import Login from './container/Login';
+import {StateProvider} from './store';
+import {NamedRoute} from './lib/Route';
+import customHistory from './history';
+import './index.css';
+import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <StateProvider>
