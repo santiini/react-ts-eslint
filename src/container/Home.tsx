@@ -1,9 +1,16 @@
 import React, {FC} from 'react';
 import {Button} from 'antd';
+import styled from '@emotion/styled';
 import {useStateValue} from '../store';
 import {CounterActionTypes} from '../store/counterReducer';
 import {TeamActionTypes} from '../store/teamReducer';
+import {ThemeActionTypes} from '../store/themeReducer';
 
+const ThemeTitle = styled.div((props) => ({
+  color: props.theme.color,
+  fontSize: props.theme.fontSize,
+  backgroundColor: props.theme.bgColor,
+}));
 interface HomeProps {
   title?: string;
 }
@@ -41,6 +48,16 @@ const Home: FC<HomeProps> = (props) => {
     });
   };
 
+  const handleChangeTheme = (): void => {
+    dispatch({
+      key: 'theme',
+      type: ThemeActionTypes.ChangeTheme,
+      payload: {
+        data: 'light',
+      },
+    });
+  };
+
   return (
     <div>
       <h4>Home--Test</h4>
@@ -51,6 +68,9 @@ const Home: FC<HomeProps> = (props) => {
       <div>data: {state.team.data}</div>
       <div>id: {state.team.id}</div>
       <Button onClick={handleChangeTeam}>change Team</Button>
+      <h4>theme: {state.theme.name}</h4>
+      <ThemeTitle>Theme-Title</ThemeTitle>
+      <Button onClick={handleChangeTheme}>change Team</Button>
     </div>
   );
 };
