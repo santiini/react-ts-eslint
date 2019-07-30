@@ -1,8 +1,8 @@
 import React, {FC} from 'react';
 import {Button} from 'antd';
-import {useStateValue} from './store';
-import {CounterActionTypes} from './store/counterReducer';
-import {TeamActionTypes} from './store/teamReducer';
+import {useStateValue} from '../store';
+import {CounterActionTypes} from '../store/counterReducer';
+import {TeamActionTypes} from '../store/teamReducer';
 
 interface HomeProps {
   title?: string;
