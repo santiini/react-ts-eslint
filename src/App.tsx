@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {NamedRouteComponentProps} from 'RouteComponent';
 import Helmet from 'react-helmet';
 import {Switch} from 'react-router-dom';
@@ -10,9 +10,10 @@ import {ThemeState} from './store/themeReducer';
 
 const App: React.FC<NamedRouteComponentProps> = (props) => {
   const [storeState] = useStateValue()!;
-  useEffect(() => {
-    props.history.push(`${props.match.url}/teams/3`);
-  }, []);
+
+  // useEffect(() => {
+  //   props.history.push(`${props.match.url}`);
+  // }, []);
 
   return (
     <ThemeProvider<ThemeState> theme={storeState.theme}>
