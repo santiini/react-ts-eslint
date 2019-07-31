@@ -1,77 +1,75 @@
-import React, {FC} from 'react';
-import {Button} from 'antd';
+import React, {FC, useState} from 'react';
+import {Layout, Button} from 'antd';
 import styled from '@emotion/styled';
-import {useStateValue} from '../store';
-import {CounterActionTypes} from '../store/counterReducer';
-import {TeamActionTypes} from '../store/teamReducer';
-import {ThemeActionTypes} from '../store/themeReducer';
+import {NamedRouteComponentProps} from 'RouteComponent';
+import logo from '../asserts/images/logo.svg';
+import collapsedLogo from '../asserts/images/logo.png';
+import MenuList from '../layout/MenuList';
+import Footer from '../layout/Footer';
+import Header from '../layout/Header';
 
-const ThemeTitle = styled.div((props) => ({
-  color: props.theme.color,
-  fontSize: props.theme.fontSize,
-  backgroundColor: props.theme.bgColor,
-}));
-interface HomeProps {
-  title?: string;
+const {Sider, Content} = Layout;
+
+const LogoWrapper = styled.div`
+  height: 50px;
+  display: flex;
+  align-items: center;
+
+  img {
+    margin: 0 6px 0 16px;
+    height: 32px;
+    border-radius: 6px;
+    vertical-align: middle;
+  }
+
+  span {
+    display: inline-block;
+    color: rgb(104, 160, 29);
+    font-size: 16px;
+    position: absolute;
+    top: 13px;
+  }
+`;
+
+const list = [
+  {name: '用户管理', value: 'user'},
+  {name: '项目管理', value: 'campaign'},
+  {name: '任务管理', value: 'task'},
+];
+
+interface HomeProps extends NamedRouteComponentProps {
+  name?: string;
 }
 const Home: FC<HomeProps> = (props) => {
-  const [state, dispatch] = useStateValue()!;
-
-  const handleIncrement = (): void => {
-    dispatch({
-      key: 'counter',
-      type: CounterActionTypes.Increment,
-      payload: {
-        data: 11,
-      },
-    });
-  };
-
-  const handleDecrement = (): void => {
-    dispatch({
-      key: 'counter',
-      type: CounterActionTypes.Decrement,
-      payload: {
-        data: 4,
-      },
-    });
-  };
-
-  const handleChangeTeam = (): void => {
-    dispatch({
-      key: 'team',
-      type: TeamActionTypes.ChangeTeam,
-      payload: {
-        data: 'team 3',
-        total: 3,
-      },
-    });
-  };
-
-  const handleChangeTheme = (): void => {
-    dispatch({
-      key: 'theme',
-      type: ThemeActionTypes.ChangeTheme,
-      payload: {
-        data: 'light',
-      },
-    });
-  };
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div>
-      <h4>Home--Test</h4>
-      <div>{state.counter.count}</div>
-      <Button onClick={handleIncrement}>increment++</Button>
-      <Button onClick={handleDecrement}>decrement--</Button>
-      <h4>Team</h4>
-      <div>data: {state.team.data}</div>
-      <div>id: {state.team.id}</div>
-      <Button onClick={handleChangeTeam}>change Team</Button>
-      <h4>theme: {state.theme.name}</h4>
-      <ThemeTitle>Theme-Title</ThemeTitle>
-      <Button onClick={handleChangeTheme}>change Team</Button>
-    </div>
+    <Layout style={{height: '100%', width: '100%'}}>
+      <Sider trigger={null} collapsible={true} collapsed={collapsed}>
+        <LogoWrapper>
+          <img src={collapsed ? collapsedLogo : logo} alt="KOL Admin" />
+        </LogoWrapper>
+        <MenuList list={list} defaultValue="user" />
+      </Sider>
+
+      <Layout>
+        <Header
+          collapsed={collapsed}
+          onToggleCollapsed={setCollapsed}
+          style={{
+            height: 64,
+            flex: '0 0 auto',
+          }}
+        />
+        <Content
+          style={{margin: 24, flex: 'auto', paddingTop: 0, minHeight: 0}}
+        >
+          <h4>Content</h4>
+          <Button>Admin</Button>
+        </Content>
+        <Footer style={{padding: 0, flex: '0 0 auto'}} />
+      </Layout>
+    </Layout>
   );
 };
 

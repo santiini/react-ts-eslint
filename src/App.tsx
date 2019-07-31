@@ -16,13 +16,10 @@ const App: React.FC<NamedRouteComponentProps> = (props) => {
 
   return (
     <ThemeProvider<ThemeState> theme={storeState.theme}>
-      <div className="app">
+      <div className="app" style={{height: '100%', width: '100%'}}>
         <Helmet title={props.title} />
         <Switch>
-          <NamedRoute
-            path={`${props.match.path}/teams/:teamId`}
-            component={Home}
-          />
+          <NamedRoute path={`${props.match.path}`} component={Home} />
         </Switch>
       </div>
     </ThemeProvider>

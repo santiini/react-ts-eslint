@@ -21,7 +21,7 @@ export const themeStateData: ThemeState = {
   color: 'rgb(0,0,0,.65)',
   fontSize: 14,
   name: 'default',
-  bgColor: 'red',
+  bgColor: 'rgba(0, 0, 0, 0.025)',
 };
 
 export const themeReducer: Reducer<ThemeState, ThemeAction> = (

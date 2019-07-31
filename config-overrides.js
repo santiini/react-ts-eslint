@@ -26,6 +26,7 @@ module.exports = {
         '@heading-color': 'rgba(0, 0, 0, 0.95)',
         '@text-color': 'rgba(0, 0, 0, 0.85)',
         '@text-color-secondary': 'rgba(0, 0, 0, .45)',
+        '@text-color-secondary-dark': 'rgba(255, 255, 255, 0.85)',
       },
     })
   ),
