@@ -24,7 +24,7 @@ const Campaign: FC<NamedRouteComponentProps> = (props) => {
         sort: params.sort,
       });
     },
-    [tableParams]
+    [fetchCampaignApi, tableParams]
   );
 
   useEffect(() => {

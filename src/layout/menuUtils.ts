@@ -17,15 +17,15 @@ export function getMenuKeysFromLocation(
   pathname: string = '/',
   menuData: MenuKeysData = {selectedKeys: [], openKeys: [], current: []}
 ): MenuKeysData {
+  // reset menuData.current
+  menuData.current = [];
   return menu.reduce((prev, cur) => {
-    // reset menuData.current
     // children
     if (!cur.children || !cur.children.length) {
-      prev.selectedKeys =
-        cur.path !== pathname
-          ? prev.selectedKeys
-          : [...prev.selectedKeys, cur.path];
-      prev.current = cur.path !== pathname ? [] : [cur.path];
+      if (cur.path === pathname) {
+        prev.selectedKeys = [...prev.selectedKeys, cur.path];
+        prev.current = [...prev.current, cur.path];
+      }
       return prev;
     }
 
@@ -35,7 +35,6 @@ export function getMenuKeysFromLocation(
       ? result.openKeys
       : [...result.openKeys, cur.path || cur.name];
 
-    prev.current = [];
     return prev;
   }, menuData);
 }

@@ -37,7 +37,7 @@ module.exports = {
     'comma-dangle': [2, 'always-multiline'],
     'no-console': ['error', {allow: ['warn', 'error']}],
     '@typescript-eslint/no-non-null-assertion': [0],
-    'react-hooks/exhaustive-deps': false,
+    // 'react-hooks/exhaustive-deps': false, // hooks deps warns
   },
   settings: {
     react: {

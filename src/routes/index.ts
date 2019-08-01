@@ -5,7 +5,7 @@
 import {lazy} from 'react';
 import {MenuDataItem} from '../layout/MenuList';
 
-const Campaign = lazy(() => import('../container/Campaign'));
+const Campaign = lazy(() => import('../container/Campaign/List'));
 const CampaignDetail = lazy(() =>
   import('../container/Campaign/CampaignDetail')
 );

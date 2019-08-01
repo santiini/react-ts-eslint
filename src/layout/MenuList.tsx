@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
@@ -71,6 +72,7 @@ const MenuList: FC<MenuListProps> = (props) => {
   /* 缓存，只计算一次 */
   const menuRet = useMemo(() => {
     const result = getMenuKeysFromLocation(list, props.pathname);
+
     return result;
   }, []);
 

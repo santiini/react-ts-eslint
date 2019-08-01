@@ -2,7 +2,7 @@
  * 本地排序的 Table
  *   1. 翻页，排序都由 Table 自己控制
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any,react-hooks/exhaustive-deps */
 import React, {FC, useState, useEffect, memo, useMemo} from 'react';
 import {Table} from 'antd';
 import {ColumnProps, TableProps} from 'antd/lib/table';

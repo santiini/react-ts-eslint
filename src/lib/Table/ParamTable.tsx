@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any,react-hooks/exhaustive-deps */
 /**
  * 受控 Table, params 参数控制 Table 的渲染与否
  * loading, pagination, rowSelection 等由内部控制,
@@ -12,7 +13,6 @@
  *        组件内部触发 tableParams 变化 --> fetchData --> 外部 params 没有变化
  * 4. rowSelection 和 params 的流程一致，内部控制和外部控制
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {FC, useState, useEffect, memo, useMemo} from 'react';
 import {Table} from 'antd';
 import {ColumnProps, PaginationConfig, SorterResult} from 'antd/lib/table';
