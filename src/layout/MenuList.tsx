@@ -47,7 +47,7 @@ const MenuList: FC<MenuListProps> = (props) => {
             item.icon ? (
               <span>
                 <Icon type={item.icon} />
-                {item.name}
+                <span>{item.name}</span>
               </span>
             ) : (
               item.name
@@ -63,7 +63,7 @@ const MenuList: FC<MenuListProps> = (props) => {
       <Menu.Item key={item.path}>
         <Link to={`${props.url}${item.path}`}>
           <Icon type={item.icon} />
-          {item.name}
+          <span>{item.name}</span>
         </Link>
       </Menu.Item>
     );

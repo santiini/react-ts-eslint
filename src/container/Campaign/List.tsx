@@ -1,8 +1,8 @@
-import React, {FC, useState, useCallback, useEffect} from 'react';
+import React, {FC, useState, useCallback, useEffect, useMemo} from 'react';
 import {NamedRouteComponentProps} from 'RouteComponent';
 import {TableParams} from 'ProjectBasic';
 import ParamsTable from '../../lib/Table/ParamTable';
-import {columns} from './column';
+import {getCampaignColumns} from './column';
 import {useApi} from '../../utils/hooks';
 import {campaignApi} from '../../api/campaign';
 import PageHeaderWrapper from '../../layout/PageHeaderWrapper';
@@ -14,11 +14,12 @@ const Campaign: FC<NamedRouteComponentProps> = (props) => {
     messaage: '获取项目列表',
   });
 
+  // fetch campaigns
   const fetchTableData = useCallback(
     async (params: TableParams): Promise<void> => {
       if (!tableParams) return;
       setTableParams(params);
-      fetchCampaignApi({
+      await fetchCampaignApi({
         startIndex: params.startIndex,
         maxResults: params.maxResults,
         sort: params.sort,
@@ -26,6 +27,9 @@ const Campaign: FC<NamedRouteComponentProps> = (props) => {
     },
     [fetchCampaignApi, tableParams]
   );
+
+  // columns
+  const columns = useMemo(() => getCampaignColumns(), []);
 
   useEffect(() => {
     setTableParams({

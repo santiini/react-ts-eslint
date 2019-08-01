@@ -60,7 +60,11 @@ const PageHeaderWrapper: FC<PageHeaderWrapperProps> = (props) => {
         <PageWrappedHeader {...props} />
       </GridContainer>
       <GridContainer>
-        <div style={{margin: '24px 24px 0'}}>{props.children}</div>
+        <div
+          style={{margin: '24px 24px 0', backgroundColor: '#fff', padding: 10}}
+        >
+          {props.children}
+        </div>
       </GridContainer>
     </div>
   );

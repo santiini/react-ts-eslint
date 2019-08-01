@@ -16,8 +16,32 @@ import {
   ColumnFieldOptions,
 } from './interface';
 import {getNumerField, sliceText} from '../../utils/formatter';
-import {Tag, Popover} from 'antd';
+import {Tag, Popover, Tooltip} from 'antd';
 import Account from '../../components/Account';
+import {IAppPlatforms} from 'KolPlatforms';
+import {appPlatforms} from '../../config/platform';
+/* assets */
+import weiboLogo from '../../assets/images/weibo.svg';
+import wechatLogo from '../../assets/images/wechat.svg';
+import xiaohongshuLogo from '../../assets/images/xhong.jpg';
+import zhihuLogo from '../../assets/images/zhihu.svg';
+import toutiao from '../../assets/images/toutiao.svg';
+import bilibiliLogo from '../../assets/images/bili.svg';
+import douyinLogo from '../../assets/images/douyin.svg';
+import babytree from '../../assets/images/babytree.svg';
+import {isAppPlatform} from '../../utils/validate';
+
+export const platformImgs: Record<IAppPlatforms, string> = {
+  weibo: weiboLogo,
+  wechat: wechatLogo,
+  xiaohongshu: xiaohongshuLogo,
+  zhihu: zhihuLogo,
+  babytree: babytree,
+  live: '',
+  douyin: douyinLogo,
+  toutiao: toutiao,
+  bilibili: bilibiliLogo,
+};
 
 /* 全体的配置项 */
 const configs = {
@@ -373,6 +397,56 @@ const translateAccount: ColumnTranslator = (options) => {
   return column;
 };
 
+// platform, platforms 以 Tag 形式的展示
+const translatePlatform: ColumnTranslator = (options) => {
+  const column = translate(options);
+
+  column.render = (platform: IAppPlatforms): React.ReactNode => {
+    if (!isAppPlatform(platform)) return;
+    return <img src={platformImgs[platform]} alt={platform} height="20" />;
+  };
+  return column;
+};
+
+const translatePlatforms: ColumnTranslator = (options) => {
+  const column = translate(options);
+
+  column.width = 120;
+  column.render = (text: IAppPlatforms | IAppPlatforms[]): React.ReactNode => {
+    if (!text) return;
+    const platforms = appPlatforms.filter((v) => text.includes(v));
+    const content = platforms.map((v) => (
+      <img
+        key={v}
+        src={platformImgs[v]}
+        style={{marginRight: 4}}
+        height="20"
+        alt={v}
+      />
+    ));
+    if (platforms.length < 4) return <div>{content}</div>;
+
+    return (
+      <div>
+        <Tooltip title={content} overlayClassName="light-tooltip">
+          {platforms.slice(0, 3).map((item) => (
+            <img
+              key={item}
+              alt={item}
+              src={platformImgs[item]}
+              style={{marginRight: 4}}
+              height="20"
+            />
+          ))}
+          <span>{`等${platforms.length}个平台`}</span>
+        </Tooltip>
+      </div>
+    );
+  };
+
+  return column;
+};
+
 const columns = {
   /* string */
   text: translateFn,
@@ -389,11 +463,14 @@ const columns = {
   tag: translateTag,
   /* 头像 */
   account: translateAccount,
+  /* platforms */
+  platform: translatePlatform,
+  platforms: translatePlatforms,
 };
 
 export type ColumnTypes = keyof typeof columns;
 
-/* translate fieldOptions */
+/* translate fieldOptions -- 单项 translate */
 export default function translateFieldOptins(
   column: SMColumnProps,
   options: ColumnFieldOptions
@@ -417,4 +494,14 @@ export default function translateFieldOptins(
     ...renderColumn,
     ...result,
   };
+}
+
+/* column list 的 translate */
+export function translateColumns(
+  columns: SMColumnProps[],
+  options: Omit<ColumnFieldOptions, 'dataIndex'>
+): ColTranslatorResult[] {
+  return columns.map((v) =>
+    translateFieldOptins(v, {...options, dataIndex: v.dataIndex || ''})
+  );
 }

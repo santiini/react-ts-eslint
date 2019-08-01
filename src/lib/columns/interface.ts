@@ -74,7 +74,7 @@ export function getRenderOpt<T>(
 /* 单个字段的 options 转换 */
 export interface ColumnFieldOptions {
   nullText?: string;
-  sortType?: 'servr' | 'client';
+  sortType?: 'server' | 'client';
   dataIndex: string;
 }
 export interface ColumnFieldOptionsFn {
