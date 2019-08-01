@@ -1,4 +1,4 @@
-import React, {FC, useState, Suspense} from 'react';
+import React, {FC, useState, Suspense, useMemo} from 'react';
 import {Layout} from 'antd';
 import styled from '@emotion/styled';
 import {NamedRouteComponentProps} from 'RouteComponent';
@@ -7,9 +7,11 @@ import collapsedLogo from '../asserts/images/logo.png';
 import MenuList from '../layout/MenuList';
 import Footer from '../layout/Footer';
 import Header from '../layout/Header';
-import {menuRoutes} from '../routes';
+import {menuRoutes, menuList} from '../routes';
 import {NamedRoute} from '../lib/Route';
 import {Redirect, Switch} from 'react-router-dom';
+import {RouteContext} from '../store/RouteContext';
+import {getBreadcrumbNameMap, getBreadcrumbProps} from '../utils';
 
 const {Sider, Content} = Layout;
 
@@ -40,6 +42,20 @@ interface HomeProps extends NamedRouteComponentProps {
 const Home: FC<HomeProps> = (props) => {
   const [collapsed, setCollapsed] = useState(false);
 
+  const breadcrumbProps = useMemo(() => {
+    const routeMap = getBreadcrumbNameMap(menuList, {
+      name: '首页',
+      path: props.match.path,
+    });
+
+    const breadcrumbProps = getBreadcrumbProps({
+      ...props,
+      breadcrumb: routeMap,
+    });
+
+    return breadcrumbProps;
+  }, [props.location, props.match]);
+
   return (
     <Layout style={{height: '100%', width: '100%'}}>
       <Sider trigger={null} collapsible={true} collapsed={collapsed}>
@@ -47,9 +63,10 @@ const Home: FC<HomeProps> = (props) => {
           <img src={collapsed ? collapsedLogo : logo} alt="KOL Admin" />
         </LogoWrapper>
         <MenuList
+          collapsed={collapsed}
+          pathname={props.location.pathname.slice(4)}
+          list={menuList}
           url={props.match.url}
-          list={menuRoutes}
-          defaultValue={menuRoutes[0] && menuRoutes[0].value}
         />
       </Sider>
 
@@ -65,23 +82,30 @@ const Home: FC<HomeProps> = (props) => {
         <Content
           style={{margin: 24, flex: 'auto', paddingTop: 0, minHeight: 0}}
         >
-          {menuRoutes.length > 0 && (
-            <Suspense fallback={<div>loading...</div>}>
-              <Switch>
-                {menuRoutes.map((item) => (
-                  <NamedRoute
-                    key={item.name}
-                    path={`${props.match.path}${item.path}`}
-                    component={item.component}
+          <RouteContext.Provider
+            value={{
+              breadcrumb: breadcrumbProps,
+              pathname: props.location.pathname,
+            }}
+          >
+            {menuRoutes.length > 0 && (
+              <Suspense fallback={<div>loading...</div>}>
+                <Switch>
+                  {menuRoutes.map((item) => (
+                    <NamedRoute
+                      key={item.name}
+                      path={`${props.match.path}${item.path}`}
+                      component={item.component}
+                    />
+                  ))}
+                  <Redirect
+                    from="*"
+                    to={`${props.match.url}${menuRoutes[0].path}`}
                   />
-                ))}
-                <Redirect
-                  from="*"
-                  to={`${props.match.url}${menuRoutes[0].path}`}
-                />
-              </Switch>
-            </Suspense>
-          )}
+                </Switch>
+              </Suspense>
+            )}
+          </RouteContext.Provider>
         </Content>
         <Footer style={{padding: 0, flex: '0 0 auto'}} />
       </Layout>

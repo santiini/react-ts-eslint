@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {AxiosResponse} from 'axios';
 import zipObject from 'lodash/zipObject';
-import sum from 'lodash/sum';
 import sumBy from 'lodash/sumBy';
 import round from 'lodash/round';
 import get from 'lodash/get';
@@ -12,24 +11,22 @@ export function getUrl(path: string): string {
   return `${protocol}//${host}${path}`;
 }
 
-export interface FormatResponseOpt<T> {
-  data: T[];
-  total: number;
-}
 /* axios 返回结果处理, X-Content-Header-Cols 属性列的转换 */
 export function formatResponse(result: AxiosResponse): AxiosResponse {
-  if (!result.headers || !result.headers['x-content-header-cols']) {
+  if (!Array.isArray(result.data)) return result;
+
+  if (!result.headers) {
     return result;
   }
 
-  if (!Array.isArray(result.data)) return result;
-
-  const keys = JSON.parse(decodeURI(result.headers['x-content-header-cols']));
-  const data = result.data.map((item) => zipObject(keys, item));
+  // const keys = JSON.parse(decodeURI(result.headers['x-content-header-cols']));
 
   result.data = {
-    data,
-    total: JSON.parse(result.headers['x-content-record-total']) || data.length,
+    data: result.data,
+    // cols: keys,
+    total:
+      JSON.parse(result.headers['x-content-record-total']) ||
+      result.data.length,
   };
 
   return result;
@@ -49,34 +46,6 @@ export function formatArrayResponse(result: AxiosResponse): AxiosResponse {
     total: JSON.parse(result.headers['x-content-record-total']),
   };
 
-  return result;
-}
-
-/* follower scored 结果处理 */
-export function formatScoredFollwers(result: AxiosResponse): AxiosResponse {
-  if (!Array.isArray(result.data)) return result;
-  const newResult = result.data.reduce<{[key in string]?: number}>(
-    (prev, cur) => {
-      if (Array.isArray(cur)) {
-        const [score, amount] = cur;
-        if (score !== undefined) {
-          prev[score] = amount[0] || 0;
-        }
-      }
-      return prev;
-    },
-    {}
-  );
-
-  // 有效粉丝率的计算
-  const sumFollowers = sum(Object.values(newResult));
-  const highScoreFollwers = sum(
-    Object.keys(newResult)
-      .filter((v) => Number(v) >= 3)
-      .map((v) => newResult[v])
-  );
-
-  result.data = round((highScoreFollwers / sumFollowers) * 100, 2);
   return result;
 }
 
