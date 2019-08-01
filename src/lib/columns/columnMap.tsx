@@ -16,7 +16,7 @@ import {
   ColumnFieldOptions,
 } from './interface';
 import {getNumerField, sliceText} from '../../utils/formatter';
-import {Tag, Popover, Tooltip} from 'antd';
+import {Tag, Popover, Tooltip, Icon} from 'antd';
 import Account from '../../components/Account';
 import {IAppPlatforms} from 'KolPlatforms';
 import {appPlatforms} from '../../config/platform';
@@ -30,6 +30,7 @@ import bilibiliLogo from '../../assets/images/bili.svg';
 import douyinLogo from '../../assets/images/douyin.svg';
 import babytree from '../../assets/images/babytree.svg';
 import {isAppPlatform} from '../../utils/validate';
+import TableFilter, {TableFilterProps} from '../../components/TableFilter';
 
 export const platformImgs: Record<IAppPlatforms, string> = {
   weibo: weiboLogo,
@@ -447,6 +448,62 @@ const translatePlatforms: ColumnTranslator = (options) => {
   return column;
 };
 
+interface ColumnFilterProps extends TableFilterProps {
+  icon?: string;
+}
+
+const getColumnSearchProps = (options: ColumnFilterProps): SMColumnProps => {
+  return {
+    filterDropdown: (filterProps): React.ReactNode => (
+      <TableFilter {...filterProps} placeholder={options.placeholder} />
+    ),
+    filterIcon: (filtered): React.ReactNode => (
+      <Icon
+        type={options.icon || 'search'}
+        style={{color: !filtered ? undefined : '#1890ff'}}
+      />
+    ),
+    // 本地 onFilter, 服务端可以通过 onTableChange 中 filter 字段获取值
+    // onFilter: (value, record): boolean =>
+    //   get<string>(record, 'name', '')
+    //     .toString()
+    //     .toLocaleLowerCase()
+    //     .includes(String(value).toLocaleLowerCase()),
+
+    // visible 变动的监听
+    // onFilterDropdownVisibleChange: (visible): void => {},
+    // render: text => (
+    //   <Highlighter
+    //     highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+    //     searchWords={[this.state.searchText]}
+    //     autoEscape
+    //     textToHighlight={text.toString()}
+    //   />
+    // ),
+  };
+};
+
+const translateFilterInput: ColumnTranslator = (options) => {
+  const column = translate(options);
+  const renderObj = getRenderOpt(options);
+
+  const params: ColumnFilterProps = {
+    placeholder:
+      renderObj && renderObj.firstValue
+        ? String(renderObj.firstValue(options))
+        : undefined,
+    icon:
+      renderObj && renderObj.secondValue
+        ? String(renderObj.secondValue(options))
+        : undefined,
+  };
+
+  return {
+    ...column,
+    ...getColumnSearchProps(params),
+  };
+};
+
 const columns = {
   /* string */
   text: translateFn,
@@ -466,6 +523,8 @@ const columns = {
   /* platforms */
   platform: translatePlatform,
   platforms: translatePlatforms,
+  /* tableFilter */
+  filterInput: translateFilterInput,
 };
 
 export type ColumnTypes = keyof typeof columns;

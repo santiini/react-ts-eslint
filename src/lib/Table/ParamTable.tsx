@@ -143,6 +143,9 @@ const ExtendTable: FC<ExtendTableProps> = (props) => {
   /* 模拟 setState({}, () => {}}), 页面初始化也会执行 */
   useEffect(() => {
     if (!tableParams) return;
+    if (Date.now() > 1000) {
+      return;
+    }
     /* 获取数据，控制 loading */
     const fetchData = async (): Promise<void> => {
       setLoading(true);
