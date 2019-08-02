@@ -14,44 +14,101 @@ const CampaignAnalysis = lazy(() =>
 );
 const Task = lazy(() => import('../container/Task'));
 const Member = lazy(() => import('../container/Member'));
+const UseStateDeno = lazy(() => import('../container/Hooks/UseState'));
+const UseEffectDemo = lazy(() => import('../container/Hooks/UseEffect'));
+const UseMemoDemo = lazy(() => import('../container/Hooks/UseMemo'));
+const UseRefDemo = lazy(() => import('../container/Hooks/UseRef'));
+const UseLayoutDemo = lazy(() => import('../container/Hooks/UseLayout'));
+const UserContextDemo = lazy(() =>
+  import('../container/Hooks/UseContext/Demo7')
+);
 
 // 嵌套的 MenuList，无法作为 Route 来遍历
 export const menuList: MenuDataItem[] = [
   {
-    name: '人员管理',
+    name: '环境构建',
     icon: 'user',
     path: '/members',
     component: Member,
   },
   {
-    name: '项目管理',
+    name: '类型学习',
     icon: 'schedule',
     children: [
       {
-        name: '项目列表',
-        icon: 'schedule',
+        name: '基础类型',
+        icon: 'basetype',
         path: '/campaigns/list',
         component: Campaign,
       },
       {
-        name: '项目详情',
+        name: '接口',
         icon: 'schedule',
-        path: '/campaigns/detail',
+        path: '/interface',
         component: CampaignDetail,
       },
       {
-        name: '项目分析',
+        name: '泛型',
         icon: 'schedule',
-        path: '/campaigns/analysis',
+        path: '/generic',
         component: CampaignAnalysis,
       },
     ],
   },
   {
-    name: '任务管理',
-    path: '/tasks',
+    name: '函数相关',
+    path: '/function',
     icon: 'unordered-list',
     component: Task,
+  },
+  {
+    name: 'Class 相关',
+    path: '/class',
+    icon: 'unordered-list',
+    component: Task,
+  },
+  {
+    name: 'React Hooks',
+    path: '/hook',
+    icon: 'unordered-list',
+    children: [
+      {
+        name: 'useState',
+        path: '/useState',
+        icon: 'unordered-list',
+        component: UseStateDeno,
+      },
+      {
+        name: 'useEffect',
+        path: '/useEffect',
+        icon: 'unordered-list',
+        component: UseEffectDemo,
+      },
+      {
+        name: 'useMemo',
+        path: '/useMemo',
+        icon: 'unordered-list',
+        component: UseMemoDemo,
+      },
+      {
+        name: 'useRef',
+        path: '/useRef',
+        icon: 'unordered-list',
+        component: UseRefDemo,
+      },
+      {
+        name: 'useLayout',
+        path: '/useLayout',
+        icon: 'unordered-list',
+        component: UseLayoutDemo,
+      },
+      {
+        name: 'userContext',
+        path: '/userContext',
+        icon: 'unordered-list',
+        component: UserContextDemo,
+      },
+    ],
   },
 ];
 
