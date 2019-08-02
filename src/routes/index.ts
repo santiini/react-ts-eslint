@@ -22,6 +22,16 @@ const UseLayoutDemo = lazy(() => import('../container/Hooks/UseLayout'));
 const UserContextDemo = lazy(() =>
   import('../container/Hooks/UseContext/Demo7')
 );
+const UserReducerDemo1 = lazy(() =>
+  import('../container/Hooks/UserReducer/Demo1')
+);
+const UserReducerDemo2 = lazy(() =>
+  import('../container/Hooks/UserReducer/Demo2')
+);
+const UserReducerDemo3 = lazy(() =>
+  import('../container/Hooks/UserReducer/Demo3')
+);
+const ForWordRefDemo = lazy(() => import('../container/Ref'));
 
 // 嵌套的 MenuList，无法作为 Route 来遍历
 export const menuList: MenuDataItem[] = [
@@ -107,6 +117,30 @@ export const menuList: MenuDataItem[] = [
         path: '/userContext',
         icon: 'unordered-list',
         component: UserContextDemo,
+      },
+      {
+        name: 'UserReducerDemo1',
+        path: '/UserReducerDemo1',
+        icon: 'unordered-list',
+        component: UserReducerDemo1,
+      },
+      {
+        name: 'UserReducerDemo2',
+        path: '/UserReducerDemo2',
+        icon: 'unordered-list',
+        component: UserReducerDemo2,
+      },
+      {
+        name: 'UserReducerDemo3',
+        path: '/UserReducerDemo3',
+        icon: 'unordered-list',
+        component: UserReducerDemo3,
+      },
+      {
+        name: 'forwardRef',
+        path: '/forwardRef',
+        icon: 'unordered-list',
+        component: ForWordRefDemo,
       },
     ],
   },

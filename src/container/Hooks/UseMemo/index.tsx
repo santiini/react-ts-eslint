@@ -49,18 +49,18 @@ const Demo3: FC<Demo3Props> = (props) => {
    * useMemo 缓存函数: 指向同一个引用，而非是一个新的函数, 相当于 Class Componennt 中的 this.onClick
    */
   // 不缓存时
-  const handleAddMoney = (): void => {
-    console.log('加钱');
-    setMoney((prev) => prev + 500);
-  };
+  // const handleAddMoney = (): void => {
+  //   console.log('加钱');
+  //   setMoney((prev) => prev + 500);
+  // };
 
   // 缓存
-  // const handleAddMoney = useMemo(() => {
-  //   return (): void => {
-  //     console.log('memo-加钱');
-  //     setMoney((prev) => prev + 500);
-  //   };
-  // }, []);
+  const handleAddMoney = useMemo(() => {
+    return (): void => {
+      console.log('memo-加钱');
+      setMoney((prev) => prev + 500);
+    };
+  }, []);
 
   /**
    * useCallback 实现上面相同的功能: 记忆事件函数
