@@ -65,9 +65,10 @@ const ExtendTable: FC<ExtendTableProps> = (props) => {
 
     const {columnKey} = (sorter || {}) as SorterResult<any>;
     // const sortKey = order === 'ascend' ? columnKey : `-${columnKey}`
-    const {sort, filter} = tableParams || {sort: '', filter: void 0};
-    const sortKey = (columnKey && `-${columnKey}`) || sort;
-
+    const {sort, filter} = tableParams || {sort: '', filter: {}};
+    const sortKey =
+      (columnKey && `${sorter.order === 'ascend' ? '' : '-'}${columnKey}`) ||
+      sort;
     /* sorter onchange */
     if (sort && sortKey && !isEqual(sortKey, sort)) {
       startIndex = 0;
@@ -75,8 +76,8 @@ const ExtendTable: FC<ExtendTableProps> = (props) => {
 
     /* filters */
     if (
-      Object.keys(filters).length > 0 &&
-      !isEqual(Object.keys(filters).length > 0, filter)
+      !(!Object.keys(filters).length && !Object.keys(filter).length) &&
+      !isEqual(filter, filters)
     ) {
       startIndex = 0;
     }
@@ -143,9 +144,6 @@ const ExtendTable: FC<ExtendTableProps> = (props) => {
   /* 模拟 setState({}, () => {}}), 页面初始化也会执行 */
   useEffect(() => {
     if (!tableParams) return;
-    if (Date.now() > 1000) {
-      return;
-    }
     /* 获取数据，控制 loading */
     const fetchData = async (): Promise<void> => {
       setLoading(true);
