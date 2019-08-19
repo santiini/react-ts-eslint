@@ -19,25 +19,18 @@ import {ColumnProps, PaginationConfig, SorterResult} from 'antd/lib/table';
 import sumBy from 'lodash/sumBy';
 import isEqual from 'lodash/isEqual';
 import {initConfig} from '../../utils/table';
+import {TableParams} from 'ProjectBasic';
 
 type SelectedRowKeys = string[] | number[];
-export interface TableParams {
-  startIndex: number;
-  maxResults: number;
-  sort: string;
-  filter: Record<string, string[]>;
-}
-
-export type TableParamsProps = TableParams;
 
 interface ExtendTableProps {
   rowKey?: string; // selectedRowKeys 对应的 ids
   total: number; // 总数
   error?: any;
-  params?: TableParamsProps; // Table 的参数，必须包含 Table Params
+  params?: TableParams; // Table 的参数，必须包含 Table Params
   list: Record<string, any>[]; // Table 的数据, 受控
   columns: ColumnProps<any>[]; // columns, 从父组件传入，受控
-  fetchData: (params: TableParamsProps) => Promise<any>;
+  fetchData: (params: TableParams) => Promise<any>;
   /* selectedRowKeys */
   selectedKeys?: SelectedRowKeys;
   onSelect?: (selectedKeys: SelectedRowKeys) => void;

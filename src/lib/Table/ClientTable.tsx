@@ -17,6 +17,7 @@ interface ExtendTableProps {
   total: number; // 总数
   list: any[]; // Table 的数据, 受控
   columns: ColumnProps<any>[]; // columns, 从父组件传入，受控
+  components?: TableProps<any>['components'];
   loading: boolean;
   /* selectedRowKeys */
   selectedKeys?: SelectedRowKeys;
@@ -51,14 +52,24 @@ const ClientTableCom: FC<ExtendTableProps> = (props) => {
 
     const scrollX = sumBy(props.columns, 'width');
 
-    columns.forEach((v) => {
-      if (v.hasOwnProperty('fixed')) {
-        v.fixed = windowWidth - 160 >= scrollX ? false : true;
-      }
+    // columns.forEach((v) => {
+    //   if (v.hasOwnProperty('fixed')) {
+    //     v.fixed = windowWidth - 160 >= scrollX ? false : v.fixed;
+    //   }
+    // });
+
+    const newColumns = columns.map((v) => {
+      return {
+        ...v,
+        fixed:
+          v.hasOwnProperty('fixed') && windowWidth - 160 <= scrollX
+            ? v.fixed
+            : false,
+      };
     });
     return {
       scrollX: scrollX,
-      columns,
+      columns: newColumns,
     };
   }, [props.columns]);
 
@@ -87,6 +98,7 @@ const ClientTableCom: FC<ExtendTableProps> = (props) => {
         locale={{
           emptyText: (props.loading && '加载中...') || '暂无数据',
         }}
+        components={props.components}
         scroll={{x: tableScrollOpt.scrollX}}
         pagination={client}
         columns={tableScrollOpt.columns}

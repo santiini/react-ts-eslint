@@ -11,7 +11,7 @@ const Campaign: FC<NamedRouteComponentProps> = (props) => {
   const [tableParams, setTableParams] = useState<TableParams>();
   const [campaignsData, fetchCampaignApi] = useApi({
     api: campaignApi.list,
-    messaage: '获取项目列表',
+    message: '获取项目列表',
   });
 
   // fetch campaigns

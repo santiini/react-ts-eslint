@@ -6,8 +6,9 @@
  *   1. children 可以嵌套菜单
  *   2. MenuList 组件自身维护 selectedKeys
  *   3. 组件自身维护 openKeys
+ *   4. 组件自身维护 selectedKeys
  */
-import React, {FC, useMemo, memo} from 'react';
+import React, {FC, memo, useState, useEffect, useRef} from 'react';
 import {Menu, Icon} from 'antd';
 import {Link} from 'react-router-dom';
 import {getMenuKeysFromLocation} from './menuUtils';
@@ -30,6 +31,10 @@ interface MenuListProps {
 }
 const MenuList: FC<MenuListProps> = (props) => {
   const {list = []} = props;
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
+  // 控制 seleckedKeys 的变化类型： 内部触发 or 外部引起
+  const selectChangeType = useRef<'inner' | 'outter'>();
   // menuItem
   function renderMenuItem(arr: MenuDataItem[]): React.ReactNodeArray {
     return arr.map((item) => renderSubMenuOrItem(item)).filter((item) => item);
@@ -70,18 +75,37 @@ const MenuList: FC<MenuListProps> = (props) => {
   }
 
   /* 缓存，只计算一次 */
-  const menuRet = useMemo(() => {
-    const result = getMenuKeysFromLocation(list, props.pathname);
+  useEffect((): void => {
+    if (selectChangeType.current === 'inner') {
+      selectChangeType.current = undefined;
+      return;
+    }
+    const result = getMenuKeysFromLocation(props.list, props.pathname);
 
-    return result;
-  }, []);
+    selectChangeType.current = 'outter';
+    setOpenKeys(result.openKeys);
+    setSelectedKeys(result.selectedKeys);
+  }, [props.pathname]);
+
+  // change select
+  const handleMenuSelect = ({key}: {key: string}): void => {
+    selectChangeType.current = 'inner';
+    setSelectedKeys([key]);
+  };
+
+  // change open
+  const handleOpenChange = (openKeys: string[]): void => {
+    setOpenKeys(openKeys);
+  };
 
   return (
     <Menu
       theme="dark"
       mode="inline"
-      defaultOpenKeys={menuRet.openKeys}
-      defaultSelectedKeys={menuRet.selectedKeys}
+      openKeys={openKeys}
+      selectedKeys={selectedKeys}
+      onSelect={handleMenuSelect}
+      onOpenChange={handleOpenChange}
     >
       {renderMenuItem(list)}
     </Menu>

@@ -2,8 +2,8 @@
  * 自定义 hooks
  */
 /* eslint-disable @typescript-eslint/no-explicit-any,react-hooks/exhaustive-deps */
-import {useState} from 'react';
-import {AxiosPromise} from 'axios';
+import {useState, useCallback} from 'react';
+import {AxiosPromise, AxiosResponse} from 'axios';
 import {notification} from 'antd';
 
 export interface ApiResult<T = string> {
@@ -15,7 +15,7 @@ export interface ApiResult<T = string> {
 interface UserApiParams<T, P> {
   // api: AxiosPromise<T>;
   api: (params: P) => AxiosPromise<T>;
-  messaage?: string;
+  message?: string;
 }
 
 /**
@@ -23,14 +23,17 @@ interface UserApiParams<T, P> {
  */
 function useApiHook<T, P>(
   params: UserApiParams<T, P>
-): [ApiResult<T>, (fetchParams: P) => void] {
+): [ApiResult<T>, (fetchParams: P) => Promise<AxiosResponse<T> | void>] {
   const [result, setData] = useState<ApiResult<T>>({
     data: void 0,
     loading: false,
     error: void 0,
   });
 
-  const fetchData = async (fetchParams: P): Promise<void> => {
+  // 缓存请求函数
+  const fetchData = useCallback(async (fetchParams: P): Promise<AxiosResponse<
+    T
+  > | void> => {
     setData({
       data: void 0,
       loading: true,
@@ -43,11 +46,11 @@ function useApiHook<T, P>(
         loading: false,
         error: void 0,
       });
+      return result;
     } catch (error) {
       notification.error({
         message: '请求出错了！',
-        description: `${params.messaage || '错误信息'}: ${error.messaage ||
-          ''}`,
+        description: `${params.message || '错误信息'}: ${error.message || ''}`,
       });
       setData(() => ({
         data: void 0,
@@ -55,7 +58,7 @@ function useApiHook<T, P>(
         error: error.message,
       }));
     }
-  };
+  }, []);
 
   return [result, fetchData];
 }
